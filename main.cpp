@@ -1,5 +1,5 @@
 //  main.cpp
-//  stack
+//  tower of hanoi using stack algorithm 
 //  Created by Payam Mizori on 11/11/2023.
 
 #include <iostream>
