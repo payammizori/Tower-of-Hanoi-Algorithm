@@ -1,72 +1,84 @@
 //  main.cpp
 //  stack
-//
 //  Created by Payam Mizori on 11/11/2023.
-//
 
 #include <iostream>
-#include <vector>
-
-using namespace std;
 
 class Stack {
 private:
-    vector<int> elements;
+    int* elements;
+    int capacity;
+    int topIndex;
 
 public:
+    // Constructor
+    Stack(int size) : capacity(size), topIndex(-1) {
+        elements = new int[capacity];
+    }
+
+    // Destructor to free allocated memory
+    ~Stack() {
+        delete[] elements;
+    }
+
     // Function to push an element onto the stack
     void push(int value) {
-        elements.push_back(value);
-        cout << "Pushed: " << value << endl;
+        if (topIndex < capacity - 1) {
+            topIndex++;
+            elements[topIndex] = value;
+            std::cout << "Pushed: " << value << std::endl;
+        } else {
+            std::cout << "Stack is full. Cannot push." << std::endl;
+        }
     }
 
     // Function to pop an element from the stack
     void pop() {
-        if (!isEmpty()) {
-            int poppedValue = elements.back();
-            elements.pop_back();
-            cout << "Popped: " << poppedValue << endl;
+        if (topIndex >= 0) {
+            int poppedValue = elements[topIndex];
+            topIndex--;
+            std::cout << "Popped: " << poppedValue << std::endl;
         } else {
-            cout << "Stack is empty. Cannot pop." << endl;
+            std::cout << "Stack is empty. Cannot pop." << std::endl;
         }
     }
 
     // Function to check if the stack is empty
     bool isEmpty() {
-        return elements.empty();
+        return topIndex == -1;
     }
 
     // Function to get the size of the stack
-    vector<int>::size_type size() {
-        return elements.size();
+    int size() {
+        return topIndex + 1;
     }
 
     // Function to display the top element of the stack
     void top() {
         if (!isEmpty()) {
-            cout << "Top element: " << elements.back() << endl;
+            std::cout << "Top element: " << elements[topIndex] << std::endl;
         } else {
-            cout << "Stack is empty. No top element." << endl;
+            std::cout << "Stack is empty. No top element." << std::endl;
         }
     }
 
     // Function to display all elements in the stack
     void display() {
         if (!isEmpty()) {
-            cout << "Stack elements: ";
-            for (int i : elements) {
-                cout << i << " ";
+            std::cout << "Stack elements: ";
+            for (int i = 0; i <= topIndex; i++) {
+                std::cout << elements[i] << " ";
             }
-            cout << endl;
+            std::cout << std::endl;
         } else {
-         cout << "Stack is empty." << endl;
+            std::cout << "Stack is empty." << std::endl;
         }
     }
 };
 
 int main() {
-    // Creating a stack object
-    Stack myStack;
+    // Creating a stack object with a capacity of 3
+    Stack myStack(3);
 
     // Testing stack operations
     myStack.push(1);
@@ -85,3 +97,6 @@ int main() {
 
     return 0;
 }
+
+
+   
