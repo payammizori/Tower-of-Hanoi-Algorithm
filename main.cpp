@@ -5,48 +5,51 @@
 #include <iostream>
 #include <stack>
 
-class AdvancedStack {
-private:
-    std::stack<int> regularStack;
-    std::stack<int> minStack;
+using namespace std;
 
-public:
-    void push(int x) {
-        if (minStack.empty() || x <= getMin()) {
-            minStack.push(x);
-        }
-        regularStack.push(x);
-    }
+struct HanoiState {
+    int n;      // Number of disks
+    char source, aux, dest;  // Pegs
+    int action;
 
-    void pop() {
-        if (regularStack.top() == getMin()) {
-            minStack.pop();
-        }
-        regularStack.pop();
-    }
-
-    int getMin() {
-        return minStack.top();
-    }
+    HanoiState(int _n, char _source, char _aux, char _dest, int _action = 0)
+        : n(_n), source(_source), aux(_aux), dest(_dest), action(_action) {}
 };
 
+void iterativeTowerOfHanoi(int n, char source, char aux, char dest) {
+    stack<HanoiState> stateStack;
+    stateStack.push(HanoiState(n, source, aux, dest));
+
+    while (!stateStack.empty()) {
+        HanoiState currentState = stateStack.top();
+        stateStack.pop();
+
+        if (currentState.n == 1) {
+            
+            cout << "Move disk 1 from " << currentState.source << " to " << currentState.dest << std::endl;
+        } else {
+            if (currentState.action == 0) {
+                // Move n-1 disks from source to aux using dest
+                stateStack.push(HanoiState(currentState.n - 1, currentState.aux, currentState.source, currentState.dest, 0));
+
+                // Move the nth disk from source to dest
+                stateStack.push(HanoiState(1, currentState.source, currentState.aux, currentState.dest, 1));
+
+                // Move the n-1 disks from aux to dest using source
+                stateStack.push(HanoiState(currentState.n - 1, currentState.source, currentState.dest, currentState.aux, 0));
+            } else {
+                // Perform the actual disk movement
+                cout << "Move disk " << currentState.n << " from " << currentState.source << " to " << currentState.dest <<endl;
+            }
+        }
+    }
+}
+
 int main() {
-    AdvancedStack myStack;
+    int n = 3; // Number of disks
+    char source = 'A', aux = 'B', dest = 'C'; // Pegs
 
-    myStack.push(3);
-    myStack.push(5);
-    std::cout << "Min: " << myStack.getMin() << std::endl; // Output: 3
-
-    myStack.push(2);
-    myStack.push(1);
-    std::cout << "Min: " << myStack.getMin() << std::endl; // Output: 1
-
-    myStack.pop();
-    std::cout << "Min: " << myStack.getMin() << std::endl; // Output: 2
+    iterativeTowerOfHanoi(n, source, aux, dest);
 
     return 0;
 }
-
-
-
-   
